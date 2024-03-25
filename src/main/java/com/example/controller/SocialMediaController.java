@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
 import com.example.service.AccountService;
+import com.example.service.MessageService;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -25,6 +27,9 @@ public class SocialMediaController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MessageService messageService;
 
 
     @PostMapping("/register")
@@ -48,5 +53,16 @@ public class SocialMediaController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 401 Unauthorized
         }
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<Message> postMessageHandler(@RequestBody Message message){
+        Message postMessage = messageService.createMessage(message);
+        if(postMessage != null){
+            return ResponseEntity.ok(postMessage); 
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+        
     }
 }
