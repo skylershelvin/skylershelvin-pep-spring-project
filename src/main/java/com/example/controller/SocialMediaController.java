@@ -1,8 +1,13 @@
 package com.example.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,4 +70,22 @@ public class SocialMediaController {
         }
         
     }
+
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getMessageHandler(){
+        List<Message> listOfMessages = messageService.getMessages();
+        return ResponseEntity.ok().body(listOfMessages);
+    }
+
+    @GetMapping("/messages/{message_id}")
+    public ResponseEntity<Message> getMessageBYIdHandler(@PathVariable int message_id){
+        Message messageByID = messageService.getMessageById(message_id); 
+        if(messageByID != null){
+            return ResponseEntity.ok().body(messageByID);
+        }
+            return ResponseEntity.status(200).build(); 
+    }
+
+    @PatchMapping("/messages/{message_id}")
+    public ResponseEntity 
 }
