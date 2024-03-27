@@ -1,10 +1,12 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,5 +89,29 @@ public class SocialMediaController {
     }
 
     @PatchMapping("/messages/{message_id}")
-    public ResponseEntity 
+    public ResponseEntity<Integer> patchMessageById(@PathVariable int message_id, @RequestBody Message updatedMessage){
+        Message message = messageService.patchMessageByID(updatedMessage, message_id);
+        if(message != null){
+            String [] lines = message.getMessage_text().split("\r|\n");
+            return ResponseEntity.ok().body(lines.length); 
+        } else {
+            return ResponseEntity.status(400).body(0); 
+        }
+    }
+
+    @DeleteMapping("/messages/{message_id}")
+    public ResponseEntity<Integer> deleteMessageByIdHandler(@PathVariable int message_id) {
+        boolean messageDeleted = messageService.deleteMessageByIdHandler(message_id);
+        if (messageDeleted) {
+            return ResponseEntity.ok().body(1); // Return 1 if the message existed and was deleted
+        } else {
+            return ResponseEntity.ok().build();
+        }
+    }
+
+    @GetMapping("/accounts/{account_id}/messages")
+public @ResponseBody ResponseEntity<List<Message>>  getMessagesByAccountId(@PathVariable int account_id){
+    List<Message> listofMessage= messageService.getMessagesByAccountId(account_id);
+    return ResponseEntity.status(200).body(listofMessage);
+}
 }

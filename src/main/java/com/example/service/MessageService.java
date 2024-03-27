@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,29 @@ public class MessageService {
         }
 
     }
+
+    public boolean deleteMessageByIdHandler(int message_id) {
+        Optional<Message> optionalMessage = messageRepository.findById(message_id);
+        if (optionalMessage.isPresent()) {
+            messageRepository.deleteById(message_id);
+            return true; // Message existed and was deleted
+        } else {
+            return false; // Message did not exist
+        }
+    }
+
+    public List<Message> getMessagesByAccountId(int account_id){
+        List<Message> listOfMessage = messageRepository.findAll();
+        List<Message> listOfUpdatedMessage = new ArrayList();
+        for (Message message : listOfMessage){
+            if (message.getPosted_by().equals(account_id)){
+                listOfUpdatedMessage.add(message);
+            }
+        }
+        return listOfUpdatedMessage;
+    }
+
+    
 
     
 
